@@ -7,6 +7,7 @@ var tunnel;
 var fixedObstacle;
 var square;
 var isTwoPlayer = true;
+var isPaused,isOver;
 
 var globalSpeed = 1;  //全局速度
 var obstacleTimeRecorder; //控制障碍产生的计时器

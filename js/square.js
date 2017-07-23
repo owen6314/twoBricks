@@ -40,7 +40,7 @@ squareObject.prototype.updateSquare = function()
 	//w
 	if(87 in keys)
 	{
-		if(this.row[0] !== 0 && this.row[1] !== this.row[0] - 1)
+		if(this.row[0] !== 0 && this.row[1] !== this.row[0] - 1 && this.canJumpTo(0,this.row[0] - 1))
 		{
 			this.row[0]--;
 			this.y[0] = tunnel.y[this.row[0]] + unit / 4;
@@ -50,7 +50,7 @@ squareObject.prototype.updateSquare = function()
 	//s
 	if(83 in keys)
 	{
-		if(this.row[0] !== 3 && this.row[1] !== this.row[0] + 1)
+		if(this.row[0] !== 3 && this.row[1] !== this.row[0] + 1 && this.canJumpTo(0,this.row[0] + 1))
 		{
 			this.row[0]++;
 			this.y[0] = tunnel.y[this.row[0]] + unit / 4;
@@ -60,7 +60,7 @@ squareObject.prototype.updateSquare = function()
 		//向上
 	if(38 in keys)
 	{
-		if(this.row[1] !== 0 && this.row[0] !== this.row[1] - 1)
+		if(this.row[1] !== 0 && this.row[0] !== this.row[1] - 1 && this.canJumpTo(1,this.row[1] - 1))
 		{
 			this.row[1]--;
 			this.y[1] = tunnel.y[this.row[1]] + unit / 4;
@@ -70,7 +70,7 @@ squareObject.prototype.updateSquare = function()
 	//向下
 	if(40 in keys)
 	{
-		if(this.row[1] !== 3 && this.row[0] !== this.row[1] + 1)
+		if(this.row[1] !== 3 && this.row[0] !== this.row[1] + 1 && this.canJumpTo(1,this.row[1] + 1))
 		{
 			this.row[1]++;
 			this.y[1] = tunnel.y[this.row[1]] + unit / 4;
@@ -79,7 +79,11 @@ squareObject.prototype.updateSquare = function()
 	}
 	for(let i = 0; i < this.num; i++)
 	{
-		this.x[i] = this.x[i] - globalSpeed + this.speed[i];
+		this.x[i] = this.x[i] - globalSpeed;
+		if(this.canGoAhead(i))
+		{
+			this.x[i] += this.speed[i];
+		}
 	}
 }
 squareObject.prototype.drawSquare = function()
@@ -89,4 +93,46 @@ squareObject.prototype.drawSquare = function()
 		gameContext.fillStyle = this.color[i];
 		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
 	}
+}
+//判断第squareNum个方块能否跳到targetRow行
+squareObject.prototype.canJumpTo = function(squareNum,targetRow)
+{
+	var squareLeft = this.x[squareNum];
+	var squareRight = this.x[squareNum] + this.a[squareNum];
+	//固定障碍
+	for(let i = 0; i < fixedObstacle.num;i++)
+	{
+		if(fixedObstacle.isAlive[i] && fixedObstacle.row[i] === targetRow)
+		{
+			let obLeft = fixedObstacle.x[i];
+			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
+			if(!(obLeft < squareLeft && obRight < squareLeft || obLeft > squareRight && obRight > squareRight))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+//判断第squareNum个方块能否前进
+squareObject.prototype.canGoAhead = function(squareNum)
+{
+	var squareLeft = this.x[squareNum];
+	var squareRight = this.x[squareNum] + this.a[squareNum];
+	//固定障碍
+	for(let i = 0; i < fixedObstacle.num;i++)
+	{
+		if(fixedObstacle.isAlive[i] && fixedObstacle.row[i] === this.row[squareNum])
+		{
+			let obLeft = fixedObstacle.x[i];
+			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
+			if(Math.abs(squareRight-obLeft) <= 1)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
