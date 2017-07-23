@@ -7,6 +7,8 @@ var squareObject = function()
 	this.a = []; //边长
 	this.color = [];
 	this.speed = [];
+
+	this.isBlocked = [];
 }
 //所有的属性都要在init中初始化
 squareObject.prototype.init = function(num)
@@ -30,12 +32,14 @@ squareObject.prototype.init = function(num)
 		this.x[i] = mapWidth / 2;
 		this.y[i] = tunnel.y[this.row[i]] + unit / 4;
 		this.a[i] = unit / 2;
-		this.speed[i] = unit / unit;
+		this.speed[i] = globalSpeed;
+		this.isBlocked[i] = false;
 	}
 
 }
 squareObject.prototype.updateSquare = function()
 {
+	//上下运动
 	//w和s控制方块1
 	//w
 	if(87 in keys)
@@ -78,14 +82,38 @@ squareObject.prototype.updateSquare = function()
 		}
 		delete keys[40];
 	}
+	//向前运动
 	for(let i = 0; i < this.num; i++)
 	{
 		this.x[i] = this.x[i] - globalSpeed;
 		if(this.canGoAhead(i))
 		{
 			this.x[i] += this.speed[i];
+			this.isBlocked[i] = false;
+		}
+		else
+		{
+			this.isBlocked[i] = true;
 		}
 	}
+	
+	//调整速度，使得方块总体上位于地图中央
+	if(this.x[0] < mapWidth / 2 && this.x[1] < mapWidth / 2)
+	{
+		this.speed[0] = globalSpeed + 0.2;
+		this.speed[1] = globalSpeed + 0.2;　
+	}
+	else if(this.x[0] > mapWidth / 2 && this.x[1] > mapWidth / 2)
+	{
+		this.speed[0] = globalSpeed - 0.2;
+		this.speed[1] = globalSpeed - 0.2;　
+	}
+	else
+	{
+		this.speed[0] = globalSpeed;
+		this.speed[1] = globalSpeed;
+	}
+
 }
 squareObject.prototype.drawSquare = function()
 {
@@ -102,6 +130,7 @@ squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 	var squareRight = this.x[squareNum] + this.a[squareNum];
 	var otherSquareLeft;
 	var otherSquareRight;
+	//另一个方块
 	if(squareNum === 0 && this.row[1] === targetRow)
 	{
 		otherSquareLeft = this.x[1];
@@ -120,7 +149,7 @@ squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 			return false;
 		}
 	}
-	//另一个方块
+
 
 	//固定障碍
 	for(let i = 0; i < fixedObstacle.num;i++)

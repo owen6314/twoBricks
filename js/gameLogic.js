@@ -6,13 +6,13 @@ var keys = [];
 var tunnel;
 var fixedObstacle;
 var square;
-var isTwoPlayer = true;
-var isPaused,isOver;
 
-var globalSpeed = 1;  //全局速度
+var globalSpeed;  //全局速度
 var obstacleTimeRecorder; //控制障碍产生的计时器
 var level;        //关卡
-
+var score1,score2; //两个玩家的得分
+var isTwoPlayer = true;
+var isPaused,isOver;
 window.quantum = {}
 
 quantum.prepare = function()
@@ -28,7 +28,15 @@ quantum.prepare = function()
 	gameCanvas.height = mapHeight;
 	unit = mapWidth / 12;
 
+	//变量初始化在prepare中
+	level = 1;
+	score1 = 0;
+	score2 = 0;
+	isPaused = false;
+	isOver = false;
+	globalSpeed = 4;
 	drawMap();
+
 	tunnel = new tunnelObject();
 	tunnel.init();
 	tunnel.drawTunnel();
@@ -38,7 +46,8 @@ quantum.prepare = function()
 	fixedObstacle = new fixedObstacleObject();
 	fixedObstacle.init();
 
-	level = 1;
+
+
 	obstacleTimeRecorder = Date.now();
 	quantum.gameLoop();
 }
@@ -48,12 +57,14 @@ quantum.gameLoop = function()
 	requestAnimationFrame(quantum.gameLoop);
 
 	drawMap();
+	drawUserStatus();
 	tunnel.drawTunnel();
 	square.updateSquare();
 	square.drawSquare();
 	quantum.generateObstacle();
 	fixedObstacle.updateFixedObstacle();
 	fixedObstacle.drawFixedObstacle();
+	quantum.updateScore();
 }
 
 quantum.generateObstacle = function()
@@ -67,6 +78,14 @@ quantum.generateObstacle = function()
 		}
 	}
 }
+quantum.updateScore = function()
+{
+	if(!square.isBlocked[0])
+		score1++;
+	if(!square.isBlocked[1])
+		score2++;
+
+}
 quantum.prepare();
 window.onresize = function()
 {
@@ -77,11 +96,10 @@ window.addEventListener("keydown", function (e)
 {
 	//38向上，40向下，回车13，空格32，w87，s83
 	e.preventDefault();
-	//回车
-	keys[e.keyCode] = true;
-	/*
-	if(isPaused === false && isStopped === false)
+	
+	//keysDown的处理在square.js中
+	if(isPaused === false && isOver === false)
 	{
-    	keysDown[e.keyCode] = true;
-	}*/
+    	keys[e.keyCode] = true;
+	}
 }, false);

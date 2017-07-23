@@ -5,7 +5,25 @@ function drawMap()
 	gameContext.fillStyle = "black";
 	gameContext.fillRect(0,0,mapWidth,mapHeight);
 }
-
+//用户道具栏和分数
+function drawUserStatus()
+{
+	let fontSize = unit / 3;
+	let font = fontSize + "px " + "Courier New";
+	gameContext.font = font;
+	gameContext.fillStyle = "white";
+	gameContext.fillText("Player1", mapWidth / 8, mapHeight / 16);
+	gameContext.fillText("Player2", mapWidth * 3 / 4, mapHeight / 16);
+	gameContext.fillText("Score:" + Math.floor(score1 / 100),mapWidth / 8, mapHeight / 8);
+	gameContext.fillText("Score:" + Math.floor(score2 / 100),mapWidth * 3 / 4, mapHeight / 8);
+	//道具栏
+	gameContext.fillStyle = "rgba(255,255,255,0.2)"
+	gameContext.fillRect(mapWidth / 8 + unit / 4, mapHeight / 6, unit, unit);
+	var img = new Image();
+	img.src = "img/change.gif";
+	gameContext.drawImage(img,mapWidth / 8 + unit / 4, mapHeight / 6);
+	gameContext.fillRect(mapWidth * 3 / 4 + unit / 4, mapHeight / 6, unit,unit);
+}
 
 //确定地图的长度和宽度，以及相关的单元的大小和位置
 function responsiveUpdate()
