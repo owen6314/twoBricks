@@ -20,7 +20,8 @@ function responsiveUpdate()
 
 	oldUnit = unit;
 	unit = mapWidth / 12;
-
+	//全局常量
+	globalSpeed = globalSpeed / oldUnit * unit;
 	//隧道
 	tunnel.width = tunnel.width / oldUnit * unit;
 	tunnel.height = tunnel.height / oldUnit * unit;
@@ -29,22 +30,26 @@ function responsiveUpdate()
 		tunnel.x[i] = tunnel.x[i] / oldUnit * unit;
 		tunnel.y[i] = tunnel.y[i] / oldUnit * unit;
 	}
-	
+
 	//方块
 	for(let i = 0; i < square.num; i++)
 	{
 		square.x[i] = square.x[i] / oldUnit * unit;
 		square.y[i] = square.y[i] / oldUnit * unit;
 		square.a[i] = square.a[i] / oldUnit * unit;
-
+		square.speed[i] = square.speed[i] / oldUnit * unit;
 	}
 
 	//障碍物
-
-}
-
-
-function clearMap()
-{
+	for(let i = 0; i < fixedObstacle.num; i++)
+	{
+		if(fixedObstacle.isAlive[i])
+		{
+			fixedObstacle.x[i] = fixedObstacle.x[i] / oldUnit * unit;
+			fixedObstacle.y[i] = fixedObstacle.y[i] / oldUnit * unit;
+			fixedObstacle.width[i] = fixedObstacle.width[i] / oldUnit * unit;
+			fixedObstacle.height[i] = fixedObstacle.height[i] / oldUnit * unit;
+		}
+	}
 
 }

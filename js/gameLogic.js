@@ -1,11 +1,17 @@
 var gameCanvas, gameContext;
 var mapWidth, mapHeight;
 var unit,oldUnit; //单位，游戏区域宽度的1/12
+var keys = [];
+//物体类
 var tunnel;
-var fixedObscale;
+var fixedObstacle;
 var square;
 var isTwoPlayer = true;
-var keys = [];
+
+var globalSpeed = 1;  //全局速度
+var obstacleTimeRecorder; //控制障碍产生的计时器
+var level;        //关卡
+
 window.quantum = {}
 
 quantum.prepare = function()
@@ -28,7 +34,11 @@ quantum.prepare = function()
 	square = new squareObject();
 	square.init();
 	square.drawSquare();
+	fixedObstacle = new fixedObstacleObject();
+	fixedObstacle.init();
 
+	level = 1;
+	obstacleTimeRecorder = Date.now();
 	quantum.gameLoop();
 }
 
@@ -40,6 +50,21 @@ quantum.gameLoop = function()
 	tunnel.drawTunnel();
 	square.updateSquare();
 	square.drawSquare();
+	quantum.generateObstacle();
+	fixedObstacle.updateFixedObstacle();
+	fixedObstacle.drawFixedObstacle();
+}
+
+quantum.generateObstacle = function()
+{
+	if(level === 1)
+	{
+		if(Date.now() - obstacleTimeRecorder >= 3000)
+		{
+			obstacleTimeRecorder = Date.now();
+			fixedObstacle.born();
+		}
+	}
 }
 quantum.prepare();
 window.onresize = function()

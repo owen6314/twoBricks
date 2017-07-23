@@ -27,9 +27,10 @@ squareObject.prototype.init = function(num)
 			this.row[i] = 3;
 			this.color[i] = "yellow";
 		}
-		this.x[i] = unit;
+		this.x[i] = mapWidth / 2;
 		this.y[i] = tunnel.y[this.row[i]] + unit / 4;
 		this.a[i] = unit / 2;
+		this.speed[i] = unit / unit;
 	}
 
 }
@@ -75,6 +76,10 @@ squareObject.prototype.updateSquare = function()
 			this.y[1] = tunnel.y[this.row[1]] + unit / 4;
 		}
 		delete keys[40];
+	}
+	for(let i = 0; i < this.num; i++)
+	{
+		this.x[i] = this.x[i] - globalSpeed + this.speed[i];
 	}
 }
 squareObject.prototype.drawSquare = function()
