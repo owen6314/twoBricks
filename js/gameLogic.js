@@ -1,5 +1,7 @@
 var gameCanvas, gameContext;
-var mapWidth, mapHeight;
+var BGCanvas, BGContext;
+var mapX, mapY,mapWidth, mapHeight;
+var BGWidth, BGHeight;
 var unit,oldUnit; //单位，游戏区域宽度的1/12
 var keys = [];
 //物体类
@@ -18,46 +20,73 @@ var isPaused,isOver;
 
 var bgMusic,getUtilSound,jumpSound;
 var slowDownSound, speedUpSound,reverseSound,invisibleSound,changeSound,gunSound;
+
 window.quantum = {}
 
 quantum.prepare = function()
 {
-	gameCanvas = document.getElementById("gameCanvas");
+	//创建游戏区域和背景区域
+	BGCanvas = document.getElementById("outer")
+	BGContext = BGCanvas.getContext("2d");
+	gameCanvas = document.getElementById("inner");
 	gameContext = gameCanvas.getContext("2d");
+
+	BGWidth = window.innerWidth;
+	BGHeight = window.innerHeight;
 
 	mapWidth = window.innerWidth;
 	mapHeight = window.innerHeight;
+	BGCanvas.width = mapWidth;
+	BGCanvas.height = mapHeight;
+	//使map为正方形
 	mapWidth = mapWidth > mapHeight ? mapHeight : mapWidth;
 	mapHeight = mapWidth;
+	//map相对于背景的偏移量
+	mapX = (BGWidth - mapWidth) / 2;
+	mapY = $("#inner").position().top;
 	gameCanvas.width = mapWidth;
 	gameCanvas.height = mapHeight;
+	//unit为单位长度
 	unit = mapWidth / 12;
 
-	//变量初始化在prepare中
-	level = 1;
-	score1 = 0;
-	score2 = 0;
+	initBackground();
+
+	level = 0;
+	//$("#map").hide().slideDown(1000);
+
+	//道具图初始化
+	initUtilImg();
+	//加载音效
+	quantum.loadSounds();
+	//初始化元素
+	tunnel = new tunnelObject();
+	tunnel.init();
+	//tunnel.drawTunnel();
+	square = new squareObject();
+	square.init();
+	//square.drawSquare();
+	fixedObstacle = new fixedObstacleObject();
+	fixedObstacle.init();
+
+	util = new utilObject();
+	util.init();
+	quantum.startAnimation()
+}
+quantum.startAnimation = function()
+{
+
+}
+quantum.gameInit = function()
+{
 	isPaused = false;
 	isOver = false;
 	//调整globalSpeed，更改碰撞检测
 	globalSpeed = 2;
 	totalUtilNum = 6;
-	//道具图初始化
-	initUtilImg();
+	score1 = 0;
+	score2 = 0;
+	level = 1;
 	drawMap();
-	//加载音效
-	quantum.loadSounds();
-	tunnel = new tunnelObject();
-	tunnel.init();
-	tunnel.drawTunnel();
-	square = new squareObject();
-	square.init();
-	square.drawSquare();
-	fixedObstacle = new fixedObstacleObject();
-	fixedObstacle.init();
-	util = new utilObject();
-	util.init();
-
 	obstacleTimeRecorder = Date.now();
 	utilTimeRecorder = Date.now();
 	quantum.gameLoop();
@@ -97,6 +126,7 @@ quantum.gameLoop = function()
 {
 	requestAnimationFrame(quantum.gameLoop);
 
+	gameContext.clearRect(0,0,mapWidth,mapHeight);
 	drawMap();
 	drawUserStatus();
 	tunnel.drawTunnel();

@@ -16,11 +16,18 @@ function initUtilImg()
 	gunImg.src = "img/gun.gif";
 }
 //绘图函数
+function initBackground()
+{
+	BGContext.drawImage(BGImage,0,0,BGWidth,BGHeight);
+	//BGContext.fillStyle = "grey";
+	//BGContext.fillRect(0,0,BGWidth,BGHeight);
+}
+
 function drawMap()
 {
 	//BGGradient = BGContext.createLinearGradient(0,0,BGWidth,BGHeight);
-	gameContext.fillStyle = "grey";
-	gameContext.fillRect(0,0,mapWidth,mapHeight);
+	//gameContext.fillStyle = "grey";
+	//gameContext.fillRect(0,0,mapWidth,mapHeight);
 }
 //用户道具栏和分数
 function drawUserStatus()

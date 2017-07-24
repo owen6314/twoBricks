@@ -11,11 +11,11 @@ var tunnelObject = function()
 tunnelObject.prototype.init = function()
 {
 	this.num = 4;
-	this.width = mapWidth;
-	this.height = mapHeight / 12;
+	this.width = BGWidth;
+	this.height = BGHeight / 12;
 	for(let i = 0; i < this.num; i++)
 	{
-		this.x[i] = 0;
+		this.x[i] = mapX;
 		this.y[i] = (2 * i + 4) * mapHeight / 12;
 	}
 	this.color[0] = "rgba(255,0,0,0.2)";
@@ -28,7 +28,7 @@ tunnelObject.prototype.drawTunnel = function()
 {
 	for(let i = 0; i < this.num; i++)
 	{
-		gameContext.fillStyle = this.color[i];
-		gameContext.fillRect(this.x[i], this.y[i], this.width,this.height);
+		BGContext.fillStyle = this.color[i];
+		BGContext.fillRect(this.x[i], this.y[i], this.width,this.height);
 	}
 };
