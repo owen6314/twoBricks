@@ -19,10 +19,9 @@ function drawUserStatus()
 	//道具栏
 	gameContext.fillStyle = "rgba(255,255,255,0.2)"
 	gameContext.fillRect(mapWidth / 8 + unit / 4, mapHeight / 6, unit, unit);
-	var img = new Image();
-	img.src = "img/change.gif";
-	gameContext.drawImage(img,mapWidth / 8 + unit / 4, mapHeight / 6);
 	gameContext.fillRect(mapWidth * 3 / 4 + unit / 4, mapHeight / 6, unit,unit);
+	//gameContext.drawImage(img,mapWidth / 8 + unit / 4, mapHeight / 6);
+
 }
 
 //确定地图的长度和宽度，以及相关的单元的大小和位置

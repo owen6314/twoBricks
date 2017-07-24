@@ -9,6 +9,9 @@ var squareObject = function()
 	this.speed = [];
 
 	this.isBlocked = [];
+	this.isSpeedUp = [];
+	//道具,0无，1加速，2减速，3颠倒，4隐身，5互换
+	this.util = [];
 }
 //所有的属性都要在init中初始化
 squareObject.prototype.init = function(num)
@@ -34,6 +37,8 @@ squareObject.prototype.init = function(num)
 		this.a[i] = unit / 2;
 		this.speed[i] = globalSpeed;
 		this.isBlocked[i] = false;
+		this.util[i] = 0;
+		this.isSpeedUp[i] = false;
 	}
 
 }
@@ -96,17 +101,27 @@ squareObject.prototype.updateSquare = function()
 			this.isBlocked[i] = true;
 		}
 	}
-	
-	//调整速度，使得方块总体上位于地图中央
-	if(this.x[0] < mapWidth / 2 && this.x[1] < mapWidth / 2)
+	//玩家1使用道具用d，玩家2使用道具用m
+	if(68 in keys)
 	{
-		this.speed[0] = globalSpeed + 0.2;
-		this.speed[1] = globalSpeed + 0.2;　
+		this.useUtil(0);
+		delete keys[68];
 	}
-	else if(this.x[0] > mapWidth / 2 && this.x[1] > mapWidth / 2)
+	if(77 in keys)
 	{
-		this.speed[0] = globalSpeed - 0.2;
-		this.speed[1] = globalSpeed - 0.2;　
+		this.useUtil(1);
+		delete keys[77];
+	}
+	//调整速度，使得方块总体上位于地图中央
+	if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
+	{
+		this.speed[0] = globalSpeed + 0.3;
+		this.speed[1] = globalSpeed + 0.3;　
+	}
+	else if(this.x[0] > 2*mapWidth / 3 && this.x[1] > 2* mapWidth / 3)
+	{
+		this.speed[0] = globalSpeed - 0.3;
+		this.speed[1] = globalSpeed - 0.3;　
 	}
 	else
 	{
@@ -207,4 +222,29 @@ squareObject.prototype.canGoAhead = function(squareNum)
 	}
 
 	return true;
+}
+
+squareObject.prototype.useUtil = function(squareNum)
+{
+	//对手的号码
+	var rivalNum = 1 - squareNum;
+	if(this.util[squareNum] !== 0)
+	{
+		switch(this.util[squareNum])
+		{
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			default:
+				break;
+		}
+		this.util[squareNum] = 0;
+	}
 }

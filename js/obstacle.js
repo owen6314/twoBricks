@@ -67,4 +67,3 @@ fixedObstacleObject.prototype.drawFixedObstacle = function()
 		}
 	}
 }
-//移动障碍物

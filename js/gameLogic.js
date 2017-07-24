@@ -6,9 +6,11 @@ var keys = [];
 var tunnel;
 var fixedObstacle;
 var square;
+var util;
 
 var globalSpeed;  //全局速度
 var obstacleTimeRecorder; //控制障碍产生的计时器
+var utilTimeRecorder;
 var level;        //关卡
 var score1,score2; //两个玩家的得分
 var isTwoPlayer = true;
@@ -34,7 +36,7 @@ quantum.prepare = function()
 	score2 = 0;
 	isPaused = false;
 	isOver = false;
-	globalSpeed = 4;
+	globalSpeed = 2;
 	drawMap();
 
 	tunnel = new tunnelObject();
@@ -45,10 +47,11 @@ quantum.prepare = function()
 	square.drawSquare();
 	fixedObstacle = new fixedObstacleObject();
 	fixedObstacle.init();
-
-
+	util = new utilObject();
+	util.init();
 
 	obstacleTimeRecorder = Date.now();
+	utilTimeRecorder = Date.now();
 	quantum.gameLoop();
 }
 
@@ -64,6 +67,10 @@ quantum.gameLoop = function()
 	quantum.generateObstacle();
 	fixedObstacle.updateFixedObstacle();
 	fixedObstacle.drawFixedObstacle();
+	quantum.generateUtil();
+	util.updateUtil();
+	util.drawUtil();
+
 	quantum.updateScore();
 }
 
@@ -75,6 +82,17 @@ quantum.generateObstacle = function()
 		{
 			obstacleTimeRecorder = Date.now();
 			fixedObstacle.born();
+		}
+	}
+}
+quantum.generateUtil = function()
+{
+	if(level === 1)
+	{
+		if(Date.now() - utilTimeRecorder >= 2000)
+		{
+			utilTimeRecorder = Date.now();
+			util.born();
 		}
 	}
 }
