@@ -10,14 +10,20 @@ html
     width: 100%;
     height: 100%;
 
-    touch-action:none;
+    touch-action: none;
 }
 body
 {
+    overflow: hidden;
+
     width: 100%;
     height: 100%;
 
     text-align: center;
+
+    background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f92, #75517d, #1b2947);
+    background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e96f92 65%, #f7f7b6);
+    background-attachment: fixed;
 }
 div
 {
@@ -31,6 +37,8 @@ div#main
     bottom: 0;
     left: 0;
 
+    overflow: hidden;
+
     width: 100%;
     height: 100%;
 }
@@ -43,9 +51,7 @@ div#main
 
     width: 100%;
     height: 100%;
-
 }
-
 div#map
 {
     position: absolute;
@@ -65,4 +71,55 @@ div#map
     display: block;
 
     margin: 0 auto;
+}
+/*星空特效，源码参考http://www.htmleaf.com/jQuery/Layout-Interface/201506272119.html*/
+@keyframes rotate
+{
+    0%
+    {
+        transform: perspective(400px) rotateZ(20deg) rotateX(-40deg) rotateY(0);
+    }
+    100%
+    {
+        transform: perspective(400px) rotateZ(20deg) rotateX(-40deg) rotateY(-360deg);
+    }
+}
+.stars
+{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+
+    transform: perspective(500px);
+    animation: rotate 90s infinite linear;
+
+    transform-style: preserve-3d;
+    perspective-origin: 50% 100%;
+}
+.star
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 2px;
+    height: 2px;
+
+    transform: translate3d(0, 0, -300px);
+    transform-origin: 0 0 -300px;
+
+    background: #f7f7b6;
+
+    backface-visibility: hidden;
+}
+
+.square1{
+
+}
+
+.square2{
+
+}
+.girlSquare{
+	
 }

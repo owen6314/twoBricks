@@ -70,14 +70,17 @@ quantum.prepare = function()
 
 	util = new utilObject();
 	util.init();
-	quantum.startAnimation()
+	//quantum.startAnimation();
+
 }
 quantum.startAnimation = function()
 {
-
+	
+	quantum.gameInit();
 }
 quantum.gameInit = function()
 {
+	$(".stars").remove();
 	isPaused = false;
 	isOver = false;
 	//调整globalSpeed，更改碰撞检测
