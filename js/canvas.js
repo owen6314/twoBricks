@@ -1,4 +1,4 @@
-var speedUpImg,speedDownImg,reverseImg,invisibleImg,changeImg;
+var speedUpImg,speedDownImg,reverseImg,invisibleImg,changeImg,gunImg;
 //加载道具图片
 function initUtilImg()
 {
@@ -12,6 +12,8 @@ function initUtilImg()
 	invisibleImg.src = "img/invisible.gif";
 	changeImg = new Image();
 	changeImg.src = "img/change.gif";
+	gunImg = new Image();
+	gunImg.src = "img/gun.gif";
 }
 //绘图函数
 function drawMap()
@@ -53,6 +55,9 @@ function drawUserStatus()
 		case 5:
 			gameContext.drawImage(changeImg,mapWidth / 8 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
 			break;
+		case 6:
+			gameContext.drawImage(gunImg,mapWidth / 8 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
 		default:
 			break;
 	}
@@ -72,6 +77,9 @@ function drawUserStatus()
 			break;
 		case 5:
 			gameContext.drawImage(changeImg,mapWidth * 3 / 4 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 6:
+			gameContext.drawImage(gunImg,mapWidth * 3 / 4 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
 			break;
 		default:
 			break;

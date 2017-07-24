@@ -4,13 +4,21 @@ var squareObject = function()
 	this.x = [];
 	this.y = [];
 	this.row = []; //所在管道
+
 	this.a = []; //边长
 	this.color = [];
 	this.speed = [];
 
 	this.isBlocked = [];
+	//状态判断
 	this.isSpeedUp = [];
-	//道具,0无，1加速，2减速，3颠倒，4隐身，5互换
+	this.isSlowDown = [];
+	this.isNormal = [];
+	//
+	this.isInvisible = [];
+	//是否被炸弹击中而停下
+	this.isHit = [];
+	//道具,0无，1加速，2减速，3颠倒，4隐身，5互换,6火炮
 	this.util = [];
 }
 //所有的属性都要在init中初始化
@@ -37,8 +45,12 @@ squareObject.prototype.init = function(num)
 		this.a[i] = unit / 2;
 		this.speed[i] = globalSpeed;
 		this.isBlocked[i] = false;
-		this.util[i] = 0;
+		this.util[i] = 6;
 		this.isSpeedUp[i] = false;
+		this.isSlowDown[i] = false;
+		this.isNormal[i] = true;
+		this.isInvisible[i] = false;
+		this.isHit[i] = false;
 	}
 
 }
@@ -63,46 +75,107 @@ squareObject.prototype.jump = function()
 {
 	//上下运动
 	//w和s控制方块1
-	//w
-	if(87 in keys)
+	//方块一正常情况
+	if(this.isNormal[0] && !this.isHit[0])	
 	{
-		if(this.row[0] !== 0 && this.canJumpTo(0,this.row[0] - 1))
+		if(87 in keys)//w
 		{
-			this.row[0]--;
-			this.y[0] = tunnel.y[this.row[0]] + unit / 4;
+			if(this.row[0] !== 0 && this.canJumpTo(0,this.row[0] - 1))
+			{
+				this.row[0]--;
+				this.y[0] = tunnel.y[this.row[0]] + unit / 4;
+				jumpSound.play();
+			}
+			
+			delete keys[87];
 		}
-		delete keys[87];
+		
+		if(83 in keys)//s
+		{
+			if(this.row[0] !== 3 && this.canJumpTo(0,this.row[0] + 1))
+			{
+				this.row[0]++;
+				this.y[0] = tunnel.y[this.row[0]] + unit / 4;
+				jumpSound.play();
+			}
+			
+			delete keys[83];		
+		}
 	}
-	//s
-	if(83 in keys)
+	//方块一反向情况
+	if(!this.isNormal[0] && !this.isHit[0])	
 	{
-		if(this.row[0] !== 3 && this.canJumpTo(0,this.row[0] + 1))
+		if(83 in keys)//s
 		{
-			this.row[0]++;
-			this.y[0] = tunnel.y[this.row[0]] + unit / 4;
+			if(this.row[0] !== 0 && this.canJumpTo(0,this.row[0] - 1))
+			{
+				this.row[0]--;
+				this.y[0] = tunnel.y[this.row[0]] + unit / 4;
+				jumpSound.play();
+			}
+			delete keys[83];
 		}
-		delete keys[83];		
+		
+		if(87 in keys)//w
+		{
+			if(this.row[0] !== 3 && this.canJumpTo(0,this.row[0] + 1))
+			{
+				this.row[0]++;
+				this.y[0] = tunnel.y[this.row[0]] + unit / 4;
+				jumpSound.play();
+			}
+			delete keys[87];		
+		}
 	}
-	//控制方块2
-		//向上
-	if(38 in keys)
+	//方块2 正常情况
+	if(this.isNormal[1] && !this.isHit[1])	
 	{
-		if(this.row[1] !== 0 && this.canJumpTo(1,this.row[1] - 1))
+		if(38 in keys)	//向上
 		{
-			this.row[1]--;
-			this.y[1] = tunnel.y[this.row[1]] + unit / 4;
+			if(this.row[1] !== 0 && this.canJumpTo(1,this.row[1] - 1))
+			{
+				this.row[1]--;
+				this.y[1] = tunnel.y[this.row[1]] + unit / 4;
+				jumpSound.play();
+			}
+			delete keys[38];
 		}
-		delete keys[38];
+		//向下
+		if(40 in keys)
+		{
+			if(this.row[1] !== 3 && this.canJumpTo(1,this.row[1] + 1))
+			{
+				this.row[1]++;
+				this.y[1] = tunnel.y[this.row[1]] + unit / 4;
+				jumpSound.play();
+			}
+			delete keys[40];
+		}
 	}
-	//向下
-	if(40 in keys)
+	//方块2 异常情况
+	if(!this.isNormal[1] && !this.isHit[1])	
 	{
-		if(this.row[1] !== 3 && this.canJumpTo(1,this.row[1] + 1))
+		if(40 in keys)	//向上
 		{
-			this.row[1]++;
-			this.y[1] = tunnel.y[this.row[1]] + unit / 4;
+			if(this.row[1] !== 0 && this.canJumpTo(1,this.row[1] - 1))
+			{
+				this.row[1]--;
+				this.y[1] = tunnel.y[this.row[1]] + unit / 4;
+				jumpSound.play();
+			}
+			delete keys[40];
 		}
-		delete keys[40];
+		//向下
+		if(38 in keys)
+		{
+			if(this.row[1] !== 3 && this.canJumpTo(1,this.row[1] + 1))
+			{
+				this.row[1]++;
+				this.y[1] = tunnel.y[this.row[1]] + unit / 4;
+				jumpSound.play();
+			}
+			delete keys[38];
+		}
 	}
 }
 squareObject.prototype.goAhead = function()
@@ -113,7 +186,18 @@ squareObject.prototype.goAhead = function()
 		this.x[i] = this.x[i] - globalSpeed;
 		if(this.canGoAhead(i))
 		{
-			this.x[i] += this.speed[i];
+			if(this.isSpeedUp[i])
+			{
+				this.x[i] = this.x[i] + this.speed[i] + 0.5;
+			}
+			else if(this.isSlowDown[i])
+			{
+				this.x[i] = this.x[i] + this.speed[i] - 0.5;
+			}
+			else
+			{
+				this.x[i] += this.speed[i];
+			}
 			this.isBlocked[i] = false;
 		}
 		else
@@ -122,6 +206,7 @@ squareObject.prototype.goAhead = function()
 		}
 	}
 	//调整速度，使得方块总体上位于地图中央
+	/*
 	if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
 	{
 		this.speed[0] = globalSpeed + 0.3;
@@ -136,12 +221,24 @@ squareObject.prototype.goAhead = function()
 	{
 		this.speed[0] = globalSpeed;
 		this.speed[1] = globalSpeed;
+	}*/
+	if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
+	{
+		this.x[0] += 0.3;
+		this.x[1] += 0.3;　
+	}
+	else if(this.x[0] > 2*mapWidth / 3 && this.x[1] > 2* mapWidth / 3)
+	{
+		this.x[0] -=  0.3;
+		this.x[1] -=  0.3;　
 	}
 }
 
 //判断第squareNum个方块能否跳到targetRow行
 squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 {
+	if(this.isHit[squareNum])
+		return false;
 	var squareLeft = this.x[squareNum];
 	var squareRight = this.x[squareNum] + this.a[squareNum];
 	var otherSquareLeft;
@@ -186,6 +283,10 @@ squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 //判断第squareNum个方块能否前进
 squareObject.prototype.canGoAhead = function(squareNum)
 {
+	if(this.isInvisible[squareNum])
+		return true;
+	if(this.isHit[squareNum])
+		return false;
 	var squareLeft = this.x[squareNum];
 	var squareRight = this.x[squareNum] + this.a[squareNum];
 	var otherSquareLeft;
@@ -253,20 +354,28 @@ squareObject.prototype.getUtil = function()
 squareObject.prototype.useUtil = function(squareNum)
 {
 	//对手的号码
-	var rivalNum = 1 - squareNum;
+	let rivalNum = 1 - squareNum;
 	if(this.util[squareNum] !== 0)
 	{
 		switch(this.util[squareNum])
 		{
 			case 1:
+				this.useSpeedUp(squareNum);
 				break;
 			case 2:
+				this.useSlowDown(squareNum);
 				break;
 			case 3:
+				this.useReverse(squareNum);
 				break;
 			case 4:
+				this.useInvisible(squareNum);
 				break;
 			case 5:
+				this.useChange(squareNum);
+				break;
+			case 6:
+				this.useGun(squareNum);
 				break;
 			default:
 				break;
@@ -274,11 +383,78 @@ squareObject.prototype.useUtil = function(squareNum)
 		this.util[squareNum] = 0;
 	}
 }
+squareObject.prototype.useSpeedUp = function(squareNum)
+{
+	this.isSpeedUp[squareNum] = true;
+	speedUpSound.play();
+	setTimeout(function(i){square.isSpeedUp[i] = false;}, 3000, squareNum);
+}
+squareObject.prototype.useSlowDown = function(squareNum)
+{
+	let rivalNum = 1 - squareNum;
+	this.isSlowDown[rivalNum] = true;
+	slowDownSound.play();
+	setTimeout(function(i){square.isSlowDown[i] = false;}, 3000, rivalNum);
+}
+squareObject.prototype.useReverse = function(squareNum)
+{
+	let rivalNum = 1 - squareNum;
+	reverseSound.play();
+	this.isNormal[rivalNum] = false;
+	setTimeout(function(i){square.isNormal[i] = true;}, 3000, rivalNum);
+}
+squareObject.prototype.useInvisible = function(squareNum)
+{
+	invisibleSound.play();
+	this.isInvisible[squareNum] = true;
+	setTimeout(function(i){square.isInvisible[i] = false;}, 3000, squareNum);
+
+}
+//停一秒之后再进行change,有动画
+squareObject.prototype.useChange = function(squareNum)
+{
+
+	let t;
+	t = this.x[0];
+	this.x[0] = this.x[1];
+	this.x[1] = t;
+	t = this.y[0];
+	this.y[0] = this.y[1];
+	this.y[1] = t;
+	t = this.row[0];
+	this.row[0] = this.row[1];
+	this.row[1] = t;
+
+}
+squareObject.prototype.useGun = function(squareNum)
+{
+	let rivalNum = 1 - squareNum;
+	if(this.row[rivalNum] === this.row[squareNum] && this.x[squareNum] < this.x[rivalNum])
+	{
+		gunSound.play();
+		this.isHit[rivalNum] = true;
+		setTimeout(function(i){square.isHit[i] = false;}, 3000, rivalNum);
+	}
+}
 squareObject.prototype.drawSquare = function()
 {
 	for(let i = 0; i < this.num; i++)
 	{
-		gameContext.fillStyle = this.color[i];
+		if(!this.isInvisible[i])
+			gameContext.fillStyle = this.color[i];
+		else
+		{
+			if(i === 0)
+				gameContext.fillStyle = "rgba(255,0,0,0.3)"
+			else if(i === 1)
+				gameContext.fillStyle = "rgba(255,0,0,0.3)"
+		}
 		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
+		//绘制方块上的火炮
+		if(this.util[i] === 6)
+		{
+			gameContext.fillStyle = "black";
+			gameContext.fillRect(this.x[i] + this.a[i], this.y[i] + 2 * this.a[i] / 5, 2* this.a[i] / 3, this.a[i] / 5);
+		}
 	}
 }

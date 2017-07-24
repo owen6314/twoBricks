@@ -17,6 +17,7 @@ var isTwoPlayer = true;
 var isPaused,isOver;
 
 var bgMusic,getUtilSound,jumpSound;
+var slowDownSound, speedUpSound,reverseSound,invisibleSound,changeSound,gunSound;
 window.quantum = {}
 
 quantum.prepare = function()
@@ -38,7 +39,9 @@ quantum.prepare = function()
 	score2 = 0;
 	isPaused = false;
 	isOver = false;
+	//调整globalSpeed，更改碰撞检测
 	globalSpeed = 2;
+	totalUtilNum = 6;
 	//道具图初始化
 	initUtilImg();
 	drawMap();
@@ -71,6 +74,24 @@ quantum.loadSounds = function()
 	jumpSound = new Audio();
 	jumpSound.src = 'sound/flash.wav';
 	jumpSound.load();
+	speedUpSound = new Audio();
+	speedUpSound.src = 'sound/speedUpEffect.wav'
+	speedUpSound.load();
+	slowDownSound = new Audio();
+	slowDownSound.src = 'sound/slowDownEffect.mp3'
+	slowDownSound.load();
+	reverseSound = new Audio();
+	reverseSound.src = 'sound/reverseEffect.mp3'
+	reverseSound.load();
+	invisibleSound = new Audio();
+	invisibleSound.src = 'sound/invisibleEffect.wav';
+	invisibleSound.load();
+	changeSound = new Audio();
+	changeSound.src = ''
+	changeSound.load();
+	gunSound = new Audio();
+	gunSound.src="sound/gunEffect.mp3";
+	gunSound.load();
 }
 quantum.gameLoop = function()
 {
@@ -95,7 +116,7 @@ quantum.generateObstacle = function()
 {
 	if(level === 1)
 	{
-		if(Date.now() - obstacleTimeRecorder >= 3000)
+		if(Date.now() - obstacleTimeRecorder >= 10000)
 		{
 			obstacleTimeRecorder = Date.now();
 			fixedObstacle.born();

@@ -1,5 +1,5 @@
 var utilImage;
-var totalUtilNum = 5;
+var totalUtilNum = 6;
 //待拾取道具类
 var utilObject = function()
 {
