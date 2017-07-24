@@ -1,3 +1,5 @@
+var utilImage;
+var totalUtilNum = 5;
 //待拾取道具类
 var utilObject = function()
 {
@@ -8,8 +10,6 @@ var utilObject = function()
 	this.row = [];
 	this.width = [];
 	this.height = [];
-	this.img;
-	this.color;
 }
 
 utilObject.prototype.init = function()
@@ -21,12 +21,12 @@ utilObject.prototype.init = function()
 		this.width[i] = unit / 2;
 		this.height[i] = unit / 2;
 	}
-	this.color = "green";
+	utilImage = new Image();
+	utilImage.src = "img/unknown.png";
 }
 //每次道具产生一排4个，先判断能否在这里产生
 utilObject.prototype.born = function()
 {
-	console.info("!");
 	let count = 0;
 	for(let i = 0; i < this.num; i++)
 	{
@@ -34,7 +34,6 @@ utilObject.prototype.born = function()
 		{
 			if(this.canPlace(count))
 			{
-				console.info("can place");
 				this.isAlive[i] = true;
 				this.row[i] = count;
 				this.x[i] = mapWidth;
@@ -68,8 +67,9 @@ utilObject.prototype.drawUtil = function()
 	{
 		if(this.isAlive[i])
 		{
-			gameContext.fillStyle = this.color;
-			gameContext.fillRect(this.x[i],this.y[i],this.width[i],this.height[i]);
+			//gameContext.fillStyle = this.color;
+			//gameContext.fillRect(this.x[i],this.y[i],this.width[i],this.height[i]);
+			gameContext.drawImage(utilImage,this.x[i],this.y[i] + unit / 4,this.width[i],this.height[i]);
 		}
 	}
 }

@@ -44,6 +44,23 @@ squareObject.prototype.init = function(num)
 }
 squareObject.prototype.updateSquare = function()
 {
+	this.jump();
+	this.goAhead();
+	this.getUtil();
+	//玩家1使用道具用d，玩家2使用道具用m
+	if(68 in keys)
+	{
+		this.useUtil(0);
+		delete keys[68];
+	}
+	if(77 in keys)
+	{
+		this.useUtil(1);
+		delete keys[77];
+	}
+}
+squareObject.prototype.jump = function()
+{
 	//上下运动
 	//w和s控制方块1
 	//w
@@ -87,6 +104,9 @@ squareObject.prototype.updateSquare = function()
 		}
 		delete keys[40];
 	}
+}
+squareObject.prototype.goAhead = function()
+{
 	//向前运动
 	for(let i = 0; i < this.num; i++)
 	{
@@ -100,17 +120,6 @@ squareObject.prototype.updateSquare = function()
 		{
 			this.isBlocked[i] = true;
 		}
-	}
-	//玩家1使用道具用d，玩家2使用道具用m
-	if(68 in keys)
-	{
-		this.useUtil(0);
-		delete keys[68];
-	}
-	if(77 in keys)
-	{
-		this.useUtil(1);
-		delete keys[77];
 	}
 	//调整速度，使得方块总体上位于地图中央
 	if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
@@ -128,16 +137,8 @@ squareObject.prototype.updateSquare = function()
 		this.speed[0] = globalSpeed;
 		this.speed[1] = globalSpeed;
 	}
+}
 
-}
-squareObject.prototype.drawSquare = function()
-{
-	for(let i = 0; i < this.num; i++)
-	{
-		gameContext.fillStyle = this.color[i];
-		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
-	}
-}
 //判断第squareNum个方块能否跳到targetRow行
 squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 {
@@ -223,7 +224,32 @@ squareObject.prototype.canGoAhead = function(squareNum)
 
 	return true;
 }
-
+squareObject.prototype.getUtil = function()
+{
+	//判断是否得到道具
+	var squareLeft;
+	var squareRight;
+	for(let i = 0; i < this.num; i++)
+	{
+		squareLeft = this.x[i];
+		squareRight = this.x[i] + this.a[i];
+		for(let j = 0 ;j < util.num; j++)
+		{
+			if(util.isAlive[j] && util.row[j] === this.row[i])
+			{
+				let utilLeft = util.x[j];
+				let utilRight = util.x[j] + util.width[j];
+				//
+				if(!(utilLeft < squareLeft && utilRight < squareLeft || utilLeft > squareRight && utilRight > squareRight))
+				{
+					util.isAlive[j] = false;
+					this.util[i] = Math.floor(Math.random() * totalUtilNum) + 1;
+					getUtilSound.play();
+				}
+			}
+		}
+	}
+}
 squareObject.prototype.useUtil = function(squareNum)
 {
 	//对手的号码
@@ -246,5 +272,13 @@ squareObject.prototype.useUtil = function(squareNum)
 				break;
 		}
 		this.util[squareNum] = 0;
+	}
+}
+squareObject.prototype.drawSquare = function()
+{
+	for(let i = 0; i < this.num; i++)
+	{
+		gameContext.fillStyle = this.color[i];
+		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
 	}
 }

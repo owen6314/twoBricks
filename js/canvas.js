@@ -1,8 +1,23 @@
+var speedUpImg,speedDownImg,reverseImg,invisibleImg,changeImg;
+//加载道具图片
+function initUtilImg()
+{
+	speedUpImg = new Image();
+	speedUpImg.src = "img/speed.jpg";
+	speedDownImg = new Image();
+	speedDownImg.src = "img/slowdown.gif";
+	reverseImg = new Image();
+	reverseImg.src = "img/reverse.gif";
+	invisibleImg = new Image();
+	invisibleImg.src = "img/invisible.gif";
+	changeImg = new Image();
+	changeImg.src = "img/change.gif";
+}
 //绘图函数
 function drawMap()
 {
 	//BGGradient = BGContext.createLinearGradient(0,0,BGWidth,BGHeight);
-	gameContext.fillStyle = "black";
+	gameContext.fillStyle = "grey";
 	gameContext.fillRect(0,0,mapWidth,mapHeight);
 }
 //用户道具栏和分数
@@ -20,7 +35,47 @@ function drawUserStatus()
 	gameContext.fillStyle = "rgba(255,255,255,0.2)"
 	gameContext.fillRect(mapWidth / 8 + unit / 4, mapHeight / 6, unit, unit);
 	gameContext.fillRect(mapWidth * 3 / 4 + unit / 4, mapHeight / 6, unit,unit);
-	//gameContext.drawImage(img,mapWidth / 8 + unit / 4, mapHeight / 6);
+	//绘制玩家1和玩家2拥有道具
+	switch(square.util[0])
+	{
+		case 1:
+			gameContext.drawImage(speedUpImg,mapWidth / 8 + unit / 2, mapHeight / 6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 2:
+			gameContext.drawImage(speedDownImg,mapWidth / 8 + unit / 2, mapHeight / 6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 3:
+			gameContext.drawImage(reverseImg,mapWidth / 8 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 4:
+			gameContext.drawImage(invisibleImg,mapWidth / 8 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 5:
+			gameContext.drawImage(changeImg,mapWidth / 8 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
+		default:
+			break;
+	}
+	switch(square.util[1])
+	{
+		case 1:
+			gameContext.drawImage(speedUpImg,mapWidth * 3 / 4 + unit / 2, mapHeight / 6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 2:
+			gameContext.drawImage(speedDownImg,mapWidth * 3 / 4 + unit / 2, mapHeight / 6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 3:
+			gameContext.drawImage(reverseImg,mapWidth * 3 / 4 + unit / 2, mapHeight / 6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 4:
+			gameContext.drawImage(invisibleImg,mapWidth * 3 / 4 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
+		case 5:
+			gameContext.drawImage(changeImg,mapWidth * 3 / 4 + unit / 2, mapHeight/6 + unit / 4,unit / 2,unit / 2);
+			break;
+		default:
+			break;
+	}
 
 }
 

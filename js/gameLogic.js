@@ -10,11 +10,13 @@ var util;
 
 var globalSpeed;  //全局速度
 var obstacleTimeRecorder; //控制障碍产生的计时器
-var utilTimeRecorder;
+var utilTimeRecorder; //产生道具计时器
 var level;        //关卡
 var score1,score2; //两个玩家的得分
 var isTwoPlayer = true;
 var isPaused,isOver;
+
+var bgMusic,getUtilSound,jumpSound;
 window.quantum = {}
 
 quantum.prepare = function()
@@ -37,8 +39,11 @@ quantum.prepare = function()
 	isPaused = false;
 	isOver = false;
 	globalSpeed = 2;
+	//道具图初始化
+	initUtilImg();
 	drawMap();
-
+	//加载音效
+	quantum.loadSounds();
 	tunnel = new tunnelObject();
 	tunnel.init();
 	tunnel.drawTunnel();
@@ -54,7 +59,19 @@ quantum.prepare = function()
 	utilTimeRecorder = Date.now();
 	quantum.gameLoop();
 }
-
+quantum.loadSounds = function()
+{
+	/*
+	bgMusic = new Audio();
+	bgMusic.src = 'sound/bg.mp3';
+	bgMusic.load();*/
+	getUtilSound = new Audio();
+	getUtilSound.src = 'sound/get.wav';
+	getUtilSound.load();
+	jumpSound = new Audio();
+	jumpSound.src = 'sound/flash.wav';
+	jumpSound.load();
+}
 quantum.gameLoop = function()
 {
 	requestAnimationFrame(quantum.gameLoop);
@@ -104,6 +121,7 @@ quantum.updateScore = function()
 		score2++;
 
 }
+
 quantum.prepare();
 window.onresize = function()
 {
