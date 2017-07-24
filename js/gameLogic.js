@@ -63,20 +63,30 @@ quantum.prepare = function()
 	tunnel.init();
 	//tunnel.drawTunnel();
 	square = new squareObject();
-	square.init();
+	square.preInit();
 	//square.drawSquare();
 	fixedObstacle = new fixedObstacleObject();
 	fixedObstacle.init();
 
 	util = new utilObject();
 	util.init();
-	//quantum.startAnimation();
+	//动画开始前的准备工作
+	$("#wall").hide();
+	$("#shadow").hide();
+	quantum.startAnimation();
 
 }
 quantum.startAnimation = function()
 {
-	
-	quantum.gameInit();
+	square.drawSquare();
+	$("#wall").width(mapX);
+	$("#wall").height(BGHeight);
+	$("#wall").show(3000);
+	$("#shadow").width(BGWidth);
+	$("#shadow").height(BGHeight);
+	$("#shadow").show(3000);
+
+	//quantum.gameInit();
 }
 quantum.gameInit = function()
 {

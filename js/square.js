@@ -21,8 +21,32 @@ var squareObject = function()
 	//道具,0无，1加速，2减速，3颠倒，4隐身，5互换,6火炮
 	this.util = [];
 }
+//preInit只为动画效果，功能性属性不必初始化
+squareObject.prototype.preInit = function()
+{
+	if(isTwoPlayer)
+		this.num = 2;
+	else
+		this.num = 1;
+	for(let i = 0; i < this.num ; i++)
+	{
+		if(i === 0)
+		{
+			this.row[i] = 1;
+			this.color[i] = "white";
+		}
+		else if(i === 1)
+		{
+			this.row[i] = 2;
+			this.color[i] = "black";
+		}
+		this.x[i] = mapWidth / 3;
+		this.y[i] = tunnel.y[this.row[i]] + unit / 4;
+		this.a[i] = unit / 2;
+	}
+}
 //所有的属性都要在init中初始化
-squareObject.prototype.init = function(num)
+squareObject.prototype.init = function()
 {
 	if(isTwoPlayer)
 		this.num = 2;
@@ -38,7 +62,7 @@ squareObject.prototype.init = function(num)
 		else if(i === 1)
 		{
 			this.row[i] = 3;
-			this.color[i] = "yellow";
+			this.color[i] = "black";
 		}
 		this.x[i] = mapWidth / 2;
 		this.y[i] = tunnel.y[this.row[i]] + unit / 4;

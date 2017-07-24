@@ -14,6 +14,8 @@ html
 }
 body
 {
+    z-index: 0;
+
     overflow: hidden;
 
     width: 100%;
@@ -45,7 +47,7 @@ div#main
 #outer
 {
     position: absolute;
-    z-index: -1;
+    z-index: 5;
 
     display: block;
 
@@ -66,7 +68,7 @@ div#map
 }
 #inner
 {
-    z-index: 2;
+    z-index: 10;
 
     display: block;
 
@@ -113,13 +115,21 @@ div#map
     backface-visibility: hidden;
 }
 
-.square1{
+#wall
+{
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
 
+    background: url(../img/wall.jpg) repeat;
 }
+#shadow
+{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
 
-.square2{
-
-}
-.girlSquare{
-	
+    background: grey;
 }
