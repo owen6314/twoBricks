@@ -1,6 +1,6 @@
 var gameCanvas, gameContext;
 var BGCanvas, BGContext;
-var mapX, mapY,mapWidth, mapHeight;
+var mapX, mapY,mapWidth, mapHeight; //mapX和mapY是地图相对于背景的偏移量
 var BGWidth, BGHeight;
 var unit,oldUnit; //单位，游戏区域宽度的1/12
 var keys = [];
@@ -81,12 +81,12 @@ quantum.startAnimation = function()
 	square.drawSquare();
 	$("#wall").width(mapX);
 	$("#wall").height(BGHeight);
-	$("#wall").show(3000);
+	$("#wall").slideDown(3000);
 	$("#shadow").width(BGWidth);
 	$("#shadow").height(BGHeight);
-	$("#shadow").show(3000);
+	$("#shadow").slideDown(3000);
 
-	//quantum.gameInit();
+	setTimeout(quantum.gameInit,5000);
 }
 quantum.gameInit = function()
 {
@@ -100,8 +100,12 @@ quantum.gameInit = function()
 	score2 = 0;
 	level = 1;
 	drawMap();
+	$("#inner").hide().slideDown(1000);
 	obstacleTimeRecorder = Date.now();
 	utilTimeRecorder = Date.now();
+
+	//方块需要重新初始化
+	square.init();
 	quantum.gameLoop();
 }
 quantum.loadSounds = function()
@@ -140,6 +144,7 @@ quantum.gameLoop = function()
 	requestAnimationFrame(quantum.gameLoop);
 
 	gameContext.clearRect(0,0,mapWidth,mapHeight);
+	BGContext.clearRect(0,0,BGWidth,BGHeight);
 	drawMap();
 	drawUserStatus();
 	tunnel.drawTunnel();

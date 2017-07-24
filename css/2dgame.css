@@ -14,7 +14,7 @@ html
 }
 body
 {
-    z-index: 0;
+    z-index: -999;
 
     overflow: hidden;
 
@@ -47,7 +47,7 @@ div#main
 #outer
 {
     position: absolute;
-    z-index: 5;
+    z-index: -5;
 
     display: block;
 
@@ -68,7 +68,8 @@ div#map
 }
 #inner
 {
-    z-index: 10;
+    /*position: absolute;*/
+    /*z-index: 10;*/
 
     display: block;
 
@@ -127,9 +128,9 @@ div#map
 #shadow
 {
     position: absolute;
-    z-index: 1;
+    z-index: -10;
     top: 0;
     left: 0;
-
+    opacity: 0.5;
     background: grey;
 }

@@ -36,7 +36,7 @@ utilObject.prototype.born = function()
 			{
 				this.isAlive[i] = true;
 				this.row[i] = count;
-				this.x[i] = mapWidth;
+				this.x[i] = mapWidth + mapX;
 				this.y[i] = tunnel.y[this.row[i]];
 				this.width[i] = unit / 2;
 				this.height[i] = unit / 2;
