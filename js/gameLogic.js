@@ -85,12 +85,12 @@ quantum.prepare = function()
 	square.drawSquare();
 
 	//在三个方块同在的背景界面停留
-	setTimeout(quantum.startAnimation,8000);
+	//setTimeout(quantum.startAnimation,8000);
 
 	//动画，之后开始游戏
-	setTimeout(quantum.gameInit,31000);
+	//setTimeout(quantum.gameInit,31000);
 
-	//quantum.gameInit();
+	quantum.gameInit();
 
 }
 //开场动画，待完善
@@ -165,6 +165,9 @@ quantum.gameInit = function()
 	util.init();
 	tunnel.drawTunnel();
 	quantum.gameLoop();
+
+
+	tunnel.drawTunnel();
 }
 
 quantum.gameLoop = function()
@@ -174,11 +177,7 @@ quantum.gameLoop = function()
 		requestAnimationFrame(quantum.gameLoop);
 
 		gameContext.clearRect(0,0,mapWidth,mapHeight);
-		//BGContext.clearRect(0,0,BGWidth,BGHeight);
-
 		drawUserStatus();
-		//tunnel.drawTunnel();
-
 		square.updateSquare();
 		square.drawSquare();
 		quantum.generateObstacle();
@@ -230,12 +229,16 @@ quantum.updateGameStatus = function()
 	{
 		isOver = true;
 		winSound.play();
+		gameContext.fillStyle = "white";
+		gameContext.fillText("Player2 Wins!", mapWidth / 3, unit);
 	}
 	//玩家2失败
 	else if(square.x[1] + square.a[1] < 0)
 	{
 		isOver = true;
 		winSound.play();
+		gameContext.fillStyle = "white";
+		gameContext.fillText("Player1 Wins!", mapWidth / 3, unit);
 	}
 }
 
@@ -255,7 +258,7 @@ quantum.loadSounds = function()
 	winSound = new Audio();
 	winSound.src = 'sound/win.wav';
 	winSound.load();
-		//开场动画时的音效
+	//开场动画时的音效
 	evilLaughSound = new Audio();
 	evilLaughSound.src = 'sound/evilLaugh.mp3';
 	evilLaughSound.load();

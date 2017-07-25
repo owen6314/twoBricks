@@ -18,6 +18,8 @@ var squareObject = function()
 	this.isInvisible = [];
 	//是否被炸弹击中而停下
 	this.isHit = [];
+	this.isRising = [];
+	this.isFalling = [];
 	//道具,0无，1加速，2减速，3颠倒，4隐身，5互换,6火炮
 	this.util = [];
 }
@@ -44,6 +46,8 @@ squareObject.prototype.preInit = function()
 		this.y[i] = tunnel.y[this.row[i]] + unit / 4;
 		this.a[i] = unit / 2;
 		this.isNormal[i] = true;
+		this.isRising[i] = false;
+		this.isFalling[i] = false;
 	}
 }
 //所有的属性都要在init中初始化
@@ -76,6 +80,8 @@ squareObject.prototype.init = function()
 		this.isNormal[i] = true;
 		this.isInvisible[i] = false;
 		this.isHit[i] = false;
+		this.isRising[i] = false;
+		this.isFalling[i] = false;
 	}
 
 }
@@ -83,6 +89,7 @@ squareObject.prototype.updateSquare = function()
 {
 	this.jump();
 	this.goAhead();
+	this.goUpOrDown();
 	this.getUtil();
 	//玩家1使用道具用d，玩家2使用道具用m
 	if(68 in keys)
@@ -257,7 +264,21 @@ squareObject.prototype.goAhead = function()
 		this.speed[1] = globalSpeed;
 	}*/
 }
-
+//被炸弹击中之后上升和下降
+squareObject.prototype.goUpOrDown = function()
+{
+	for(let i = 0 ;i < this.num; i++)
+	{
+		if(this.isRising[i])
+		{
+			this.y[i] -= 1;
+		}
+		else if(this.isFalling[i])
+		{
+			this.y[i] += 1;
+		}
+	}
+}
 //判断第squareNum个方块能否跳到targetRow行
 squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 {
@@ -368,7 +389,35 @@ squareObject.prototype.getUtil = function()
 				if(!(utilLeft < squareLeft && utilRight < squareLeft || utilLeft > squareRight && utilRight > squareRight))
 				{
 					util.isAlive[j] = false;
-					this.util[i] = Math.floor(Math.random() * totalUtilNum) + 1;
+					//不同道具得到的概率不同
+					let t = Math.floor(Math.random() * 26);
+					//交换道具的频率最低
+					if(t === 0)
+						this.util[i] = 5;
+					//不优雅的实现方式
+					else
+					{
+						let temp = t % 5;
+						switch(temp)
+						{
+							case 0:
+								this.util[i] = 1;
+								break;
+							case 1:
+								this.util[i] = 2;
+								break;
+							case 2:
+								this.util[i] = 3;
+								break;
+							case 3:
+								this.util[i] = 4;
+								break;
+							case 4:
+								this.util[i] = 6;
+								break;
+						}
+					}
+					//this.uti l[i] = Math.floor(Math.random() * totalUtilNum) + 1;
 					getUtilSound.play();
 				}
 			}
@@ -457,7 +506,10 @@ squareObject.prototype.useGun = function(squareNum)
 	{
 		gunSound.play();
 		this.isHit[rivalNum] = true;
-		setTimeout(function(i){square.isHit[i] = false;}, 2000, rivalNum);
+		this.isRising[rivalNum] = true;
+		setTimeout(function(i){square.isHit[i] = false;}, 1000, rivalNum);
+		setTimeout(function(i){square.isRising[i] = false; square.isFalling[i] = true;}, 500, rivalNum);
+		setTimeout(function(i){square.isFalling[i] = false;},1000,rivalNum);
 	}
 }
 squareObject.prototype.drawSquare = function()
@@ -485,6 +537,20 @@ squareObject.prototype.drawSquare = function()
 		{
 			gameContext.fillStyle = this.color[i];
 			gameContext.fillRect(this.x[i] + this.a[i], this.y[i] + 2 * this.a[i] / 5, 2* this.a[i] / 3, this.a[i] / 5);
+		}
+		//绘制p1和p2的指示文字
+		let smallFontSize = unit / 3;
+		let smallFont = smallFontSize + "px " + "Courier New";
+		gameContext.font = smallFont;
+		if(i === 0)
+		{
+			gameContext.fillStyle = "black";
+			gameContext.fillText("1", this.x[i] + this.a[i] / 4, this.y[i] + 2 *this.a[i] / 3);
+		}
+		else
+		{
+			gameContext.fillStyle = "white";
+			gameContext.fillText("2", this.x[i] + this.a[i] / 4, this.y[i] + 2 * this.a[i] / 3);
 		}
 	}
 }

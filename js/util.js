@@ -85,11 +85,6 @@ utilObject.prototype.canPlace = function(targetRow)
 			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
 			if(utilLeft >= obLeft && utilLeft <= obRight || utilRight >= obLeft && utilRight <= obRight)
 			{
-				console.info(i);
-				console.info(utilLeft);
-				console.info(utilRight);
-				console.info(obLeft);
-				console.info(obRight);
 				return false;
 			}
 		}
