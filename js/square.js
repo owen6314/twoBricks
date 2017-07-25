@@ -43,6 +43,7 @@ squareObject.prototype.preInit = function()
 		this.x[i] = mapWidth / 3;
 		this.y[i] = tunnel.y[this.row[i]] + unit / 4;
 		this.a[i] = unit / 2;
+		this.isNormal[i] = true;
 	}
 }
 //所有的属性都要在init中初始化
@@ -474,11 +475,25 @@ squareObject.prototype.drawSquare = function()
 				gameContext.fillStyle = "rgba(255,0,0,0.3)"
 		}
 		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
+		//不正常的情况，红色边框
+		if(!this.isNormal[i])
+		{
+			gameContext.strokeStyle = "red";
+			gameContext.strokeRect(this.x[i],this.y[i],this.a[i],this.a[i]);
+		}
 		//绘制方块上的火炮
 		if(this.util[i] === 6)
 		{
-			gameContext.fillStyle = "black";
+			gameContext.fillStyle = this.color[i];
 			gameContext.fillRect(this.x[i] + this.a[i], this.y[i] + 2 * this.a[i] / 5, 2* this.a[i] / 3, this.a[i] / 5);
 		}
+	}
+}
+
+squareObject.prototype.clearSquare = function()
+{
+	for(let i = 0; i < this.num; i++)
+	{
+		gameContext.clearRect(this.x[i],this.y[i], this.a[i], this.a[i]);
 	}
 }

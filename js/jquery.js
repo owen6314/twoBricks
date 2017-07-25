@@ -10183,6 +10183,36 @@ jQuery.fn.extend( {
 	}
 } );
 
+
+//在jQuery中加入slideleft方法，速度是固定值
+
+jQuery.fn.extend({
+  slideRight: function(args) {
+    return this.each(function(args) {
+      jQuery(this).animate({width: 'show'},3000);
+    });
+  },
+  slideLeft: function(speed) {
+    return this.each(function(speed) {
+      jQuery(this).animate({width: 'hide'},speed);
+    });
+  },
+  slideToggleWidth: function() {
+    return this.each(function() {
+      var el = jQuery(this);
+      if (el.css('display') == 'none') {
+        el.slideRight();
+      } else {
+        el.slideLeft();
+      }
+    });
+  }
+});
+
+
+
+
+
 jQuery.holdReady = function( hold ) {
 	if ( hold ) {
 		jQuery.readyWait++;

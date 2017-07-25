@@ -34,7 +34,7 @@ fixedObstacleObject.prototype.born = function()
 				this.row[i] = Math.floor(Math.random() * 4);
 				this.x[i] = mapWidth;
 				this.y[i] = tunnel.y[this.row[i]];
-				this.width[i] = unit / 2;
+				this.width[i] = unit;
 				this.height[i] = unit;
 				break;
 			}

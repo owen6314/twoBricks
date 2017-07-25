@@ -134,3 +134,8 @@ div#map
     opacity: 0.5;
     background: grey;
 }
+#girl
+{
+	position: absolute;
+	background: pink;
+}
