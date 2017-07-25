@@ -70,6 +70,7 @@ quantum.prepare = function()
 
 	util = new utilObject();
 	util.init();
+	/*
 	//动画开始前的准备工作
 	$("#wall").hide();
 	$("#shadow").hide();
@@ -79,33 +80,42 @@ quantum.prepare = function()
 	$("#girl").height(square.a[0]);
 	$("#girl").css({"left": mapX + square.x[0] + 2 * unit,"top":mapY + (square.y[0] + square.y[1]) / 2});
 	square.drawSquare();
-	//背景界面
+
+
+	
+	//在三个方块同在的背景界面停留
 	setTimeout(quantum.startAnimation,5000);
 
 	//动画20秒，之后开始游戏
-	setTimeout(quantum.gameInit,20000);
+	setTimeout(quantum.gameInit,20000);*/
+
+
+
+	quantum.gameInit();
 
 }
+//开场动画，待完善
 quantum.startAnimation = function()
 {
-	$("#wall").width(mapX);
-	$("#wall").height(BGHeight);
-	$("#wall").slideRight(4000);
-	$("#girl,#inner").effect("shake",{distance:50,times:50});
+	//震动效果
+	$("#girl,#inner").effect("shake",{distance:30,times:30});
 
+	//墙进入画面
+	setTimeout(function(){$("#wall").width(mapX);
+	$("#wall").height(BGHeight);
+	$("#wall").slideRight(3000);},2000);
 	//灰色遮罩
 	setTimeout(function(){
 	$("#shadow").width(BGWidth);
 	$("#shadow").height(BGHeight);
-	$("#shadow").slideDown(3000);},3000);
+	$("#shadow").slideDown(3000);},5000);
 
 	//粉色方块移出屏幕,黑白方块消失
-	$("#girl").animate({left:BGWidth + square.a[0]}, 4000);
-	setTimeout(square.clearSquare,2000);
-	//在方块擦除和tunnel出现之间的过场文字
-
+	setTimeout(function(){
+	$("#girl").animate({left:BGWidth + square.a[0]}, 4000);},8000);
+	
 	//tunnel
-	setTimeout('$("#outer").slideRight()'，8000);
+	setTimeout('$("#outer").slideRight()',10000);
 }
 quantum.gameInit = function()
 {

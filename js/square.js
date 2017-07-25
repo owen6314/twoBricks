@@ -492,6 +492,7 @@ squareObject.prototype.drawSquare = function()
 
 squareObject.prototype.clearSquare = function()
 {
+	
 	for(let i = 0; i < this.num; i++)
 	{
 		gameContext.clearRect(this.x[i],this.y[i], this.a[i], this.a[i]);
