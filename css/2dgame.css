@@ -116,15 +116,19 @@ div#map
     backface-visibility: hidden;
 }
 
-#wall
+.wall
 {
     position: absolute;
     z-index: 2;
-    top: 0;
-    left: 0;
 
-    background: url(../img/wall.jpg) repeat;
+    background: url(../img/texture.jpg) repeat;
 }
+#leftWall
+{
+	top: 0;
+    left: 0;
+}
+
 #shadow
 {
     position: absolute;
@@ -138,4 +142,10 @@ div#map
 {
 	position: absolute;
 	background: pink;
+}
+
+#slogan
+{
+	position:absolute;
+	
 }

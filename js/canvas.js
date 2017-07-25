@@ -38,12 +38,7 @@ function initBackground()
     });        
 }
 
-function drawMap()
-{
-	//BGGradient = BGContext.createLinearGradient(0,0,BGWidth,BGHeight);
-	//gameContext.fillStyle = "grey";
-	//gameContext.fillRect(0,0,mapWidth,mapHeight);
-}
+
 //用户道具栏和分数
 function drawUserStatus()
 {

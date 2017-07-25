@@ -223,6 +223,14 @@ squareObject.prototype.goAhead = function()
 			{
 				this.x[i] += this.speed[i];
 			}
+			if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
+			{
+				this.x[i] += 0.3;
+			}
+			else if(this.x[0] > 2*mapWidth / 3 && this.x[1] > 2* mapWidth / 3)
+			{
+				this.x[i] -=  0.3;
+			}
 			this.isBlocked[i] = false;
 		}
 		else
@@ -230,6 +238,7 @@ squareObject.prototype.goAhead = function()
 			this.isBlocked[i] = true;
 		}
 	}
+
 	//调整速度，使得方块总体上位于地图中央
 	/*
 	if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
@@ -247,16 +256,6 @@ squareObject.prototype.goAhead = function()
 		this.speed[0] = globalSpeed;
 		this.speed[1] = globalSpeed;
 	}*/
-	if(this.x[0] < mapWidth / 3 && this.x[1] < mapWidth / 3)
-	{
-		this.x[0] += 0.3;
-		this.x[1] += 0.3;　
-	}
-	else if(this.x[0] > 2*mapWidth / 3 && this.x[1] > 2* mapWidth / 3)
-	{
-		this.x[0] -=  0.3;
-		this.x[1] -=  0.3;　
-	}
 }
 
 //判断第squareNum个方块能否跳到targetRow行
@@ -341,7 +340,7 @@ squareObject.prototype.canGoAhead = function(squareNum)
 		{
 			let obLeft = fixedObstacle.x[i];
 			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
-			if(Math.abs(squareRight-obLeft) <= 1)
+			if(Math.abs(squareRight-obLeft) <= 4)
 			{
 				return false;
 			}
@@ -492,7 +491,7 @@ squareObject.prototype.drawSquare = function()
 
 squareObject.prototype.clearSquare = function()
 {
-	
+
 	for(let i = 0; i < this.num; i++)
 	{
 		gameContext.clearRect(this.x[i],this.y[i], this.a[i], this.a[i]);

@@ -36,7 +36,7 @@ utilObject.prototype.born = function()
 			{
 				this.isAlive[i] = true;
 				this.row[i] = count;
-				this.x[i] = mapWidth + mapX;
+				this.x[i] = mapWidth;
 				this.y[i] = tunnel.y[this.row[i]];
 				this.width[i] = unit / 2;
 				this.height[i] = unit / 2;
@@ -67,8 +67,6 @@ utilObject.prototype.drawUtil = function()
 	{
 		if(this.isAlive[i])
 		{
-			//gameContext.fillStyle = this.color;
-			//gameContext.fillRect(this.x[i],this.y[i],this.width[i],this.height[i]);
 			gameContext.drawImage(utilImage,this.x[i],this.y[i] + unit / 4,this.width[i],this.height[i]);
 		}
 	}
@@ -85,8 +83,13 @@ utilObject.prototype.canPlace = function(targetRow)
 		{
 			let obLeft = fixedObstacle.x[i];
 			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
-			if(!(obLeft < utilLeft && obRight < utilLeft || obLeft > utilRight && obRight > utilRight))
+			if(utilLeft >= obLeft && utilLeft <= obRight || utilRight >= obLeft && utilRight <= obRight)
 			{
+				console.info(i);
+				console.info(utilLeft);
+				console.info(utilRight);
+				console.info(obLeft);
+				console.info(obRight);
 				return false;
 			}
 		}

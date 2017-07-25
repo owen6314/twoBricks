@@ -10194,7 +10194,7 @@ jQuery.fn.extend({
   },
   slideLeft: function(speed) {
     return this.each(function(speed) {
-      jQuery(this).animate({width: 'hide'},speed);
+      jQuery(this).animate({width: 'hide'},3000);
     });
   },
   slideToggleWidth: function() {
