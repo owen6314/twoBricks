@@ -65,7 +65,7 @@ squareObject.prototype.init = function()
 			this.row[i] = 3;
 			this.color[i] = "black";
 		}
-		this.x[i] = mapWidth / 2;
+		this.x[i] = 2 *mapWidth / 3;
 		this.y[i] = tunnel.y[this.row[i]] + unit / 4;
 		this.a[i] = unit / 2;
 		this.speed[i] = globalSpeed;
@@ -457,7 +457,7 @@ squareObject.prototype.useGun = function(squareNum)
 	{
 		gunSound.play();
 		this.isHit[rivalNum] = true;
-		setTimeout(function(i){square.isHit[i] = false;}, 3000, rivalNum);
+		setTimeout(function(i){square.isHit[i] = false;}, 2000, rivalNum);
 	}
 }
 squareObject.prototype.drawSquare = function()
@@ -469,9 +469,9 @@ squareObject.prototype.drawSquare = function()
 		else
 		{
 			if(i === 0)
-				gameContext.fillStyle = "rgba(255,0,0,0.3)"
+				gameContext.fillStyle = "rgba(255,255,255,0.3)"
 			else if(i === 1)
-				gameContext.fillStyle = "rgba(255,0,0,0.3)"
+				gameContext.fillStyle = "rgba(0,0,0,0.3)"
 		}
 		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
 		//不正常的情况，红色边框

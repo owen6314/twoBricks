@@ -18,7 +18,7 @@ var score1,score2; //两个玩家的得分
 var isTwoPlayer = true;
 var isPaused,isOver;
 
-var bgMusic,getUtilSound,jumpSound, evilLaughSound;
+var bgMusic,getUtilSound,jumpSound,winSound,evilLaughSound;
 var slowDownSound, speedUpSound,reverseSound,invisibleSound,changeSound,gunSound;
 
 window.quantum = {}
@@ -88,7 +88,7 @@ quantum.prepare = function()
 	setTimeout(quantum.startAnimation,8000);
 
 	//动画，之后开始游戏
-	setTimeout(quantum.gameInit,35000);
+	setTimeout(quantum.gameInit,31000);
 
 	//quantum.gameInit();
 
@@ -98,7 +98,6 @@ quantum.startAnimation = function()
 {
 	//震动效果
 	$("body").effect("shake",{distance:20,times:10});
-
 	//墙进入画面
 	setTimeout(function(){$("#leftWall").width(mapX);
 	$("#leftWall").height(BGHeight);
@@ -108,7 +107,6 @@ quantum.startAnimation = function()
 	$("#rightWall").css({"left":mapX + mapWidth,"top":0});
 	$("#rightWall").slideDown(3000);
 	},2000);
-
 	//墙落下时小方块的上下震动效果
 	setTimeout(function(){
 		$("#girl,#inner").effect("shake",{direction:"up",distance:20,times:1});
@@ -135,12 +133,10 @@ quantum.startAnimation = function()
 	$("#slogan").css({"left":mapX + mapWidth / 2,"top":mapY + mapHeight / 2,"width":mapWidth / 2,"height":mapHeight / 2,"fontSize":unit / 2+"px","color":"white"});
 	$("#slogan").show("fade");
 	},12000);
-	
 	//标语消失
 	setTimeout(function(){
 		$("#slogan").hide("explode");
 	},19000);
-
 	//tunnel
 	setTimeout('$("#outer").slideRight()',20000);
 }
@@ -201,7 +197,7 @@ quantum.generateObstacle = function()
 {
 	if(level === 1)
 	{
-		if(Date.now() - obstacleTimeRecorder >= 4000)
+		if(Date.now() - obstacleTimeRecorder >= 3000)
 		{
 			obstacleTimeRecorder = Date.now();
 			fixedObstacle.born();
@@ -233,11 +229,13 @@ quantum.updateGameStatus = function()
 	if(square.x[0] + square.a[0] < 0)
 	{
 		isOver = true;
+		winSound.play();
 	}
 	//玩家2失败
 	else if(square.x[1] + square.a[1] < 0)
 	{
 		isOver = true;
+		winSound.play();
 	}
 }
 
@@ -254,7 +252,10 @@ quantum.loadSounds = function()
 	jumpSound = new Audio();
 	jumpSound.src = 'sound/flash.wav';
 	jumpSound.load();
-	//开场动画时的音效
+	winSound = new Audio();
+	winSound.src = 'sound/win.wav';
+	winSound.load();
+		//开场动画时的音效
 	evilLaughSound = new Audio();
 	evilLaughSound.src = 'sound/evilLaugh.mp3';
 	evilLaughSound.load();

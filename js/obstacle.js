@@ -24,19 +24,39 @@ fixedObstacleObject.prototype.init = function()
 }
 fixedObstacleObject.prototype.born = function()
 {
+	//每次在几行中产生障碍是随机的
+
 	if(level === 1)
 	{
+		//count代表有几行出现障碍
+		let count;
+		
+		let r = Math.floor(Math.random() * 10);
+		if(r === 9)
+			count = 3;
+		else if(r >= 5)
+			count = 2;
+		else
+			count = 1;
+		let rowCash = [];
+		let tempCount = 0;
 		for(let i = 0; i < this.num; i++)
 		{
 			if(this.isAlive[i] === false)
 			{
+				tempCount++;
 				this.isAlive[i] = true;
-				this.row[i] = Math.floor(Math.random() * 4);
+				let t = Math.floor(Math.random() * 4);
+				while(t in rowCash)
+					t = Math.floor(Math.random() * 4);
+				this.row[i] = t;
+				rowCash.push(t);
 				this.x[i] = mapWidth;
 				this.y[i] = tunnel.y[this.row[i]];
 				this.width[i] = unit;
 				this.height[i] = unit;
-				break;
+				if(tempCount === count)
+					break;
 			}
 
 		}
