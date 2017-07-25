@@ -70,7 +70,6 @@ div#map
 {
     /*position: absolute;*/
     /*z-index: 10;*/
-
     display: block;
 
     margin: 0 auto;
@@ -125,7 +124,7 @@ div#map
 }
 #leftWall
 {
-	top: 0;
+    top: 0;
     left: 0;
 }
 
@@ -135,17 +134,23 @@ div#map
     z-index: -10;
     top: 0;
     left: 0;
-    opacity: 0.5;
+
+    opacity: .5;
     background: grey;
 }
 #girl
 {
-	position: absolute;
-	background: pink;
+    position: absolute;
+
+    background: pink;
 }
 
 #slogan
 {
+    position: absolute;
+}
+#threat
+{
 	position:absolute;
-	
+	color:red;
 }

@@ -77,6 +77,7 @@ quantum.prepare = function()
 	$("#shadow").hide();
 	$("#outer").hide();
 	$("#slogan").hide();
+	$("#threat").hide();
 	//绘制方块
 	$("#girl").width(square.a[0]);
 	$("#girl").height(square.a[0]);
@@ -114,7 +115,12 @@ quantum.startAnimation = function()
 		fallSound.play();
 		setTimeout(function(){
 			//显示恶魔头像（与"Only one can survive"),粉色方块开始抖动
+			$("#threat").css({"left":mapX,"top":unit,"width":mapWidth,"height":unit,"fontSize":unit / 2 + "px"});
+			$("#threat").show("fade");
 			evilLaughSound.play();
+			setTimeout(function(){
+				$("#threat").hide("puff");
+			},4000);
 		},2000);
 	},5000);
 	//灰色遮罩
