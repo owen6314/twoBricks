@@ -207,7 +207,7 @@ quantum.generateObstacle = function()
 	}
 	else if(level === 2)
 	{
-		if(Date.now() - obstacleTimeRecorder >= 600)
+		if(Date.now() - obstacleTimeRecorder >= 400)
 		{
 			obstacleTimeRecorder = Date.now();
 			fixedObstacle.born();
@@ -285,7 +285,7 @@ quantum.updateLevel = function()
 		{
 			obstacleTimeRecorder = Date.now();
 			level = 2;
-			globalSpeed = 6;
+			globalSpeed = 4;
 			square.speed[0] = globalSpeed;
 			square.speed[1] = globalSpeed;
 		}
