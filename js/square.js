@@ -316,7 +316,8 @@ squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 		{
 			let obLeft = fixedObstacle.x[i];
 			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
-			if(!(obLeft < squareLeft && obRight < squareLeft || obLeft > squareRight && obRight > squareRight))
+			//一个trick，防止出现被连续两个方块，被其中一个挡住，无法跳到另一个的情况
+			if(squareLeft - obLeft > 0 && squareLeft < obRight || squareRight - obLeft > 5 && squareRight < obRight)
 			{
 				return false;
 			}
@@ -325,7 +326,7 @@ squareObject.prototype.canJumpTo = function(squareNum,targetRow)
 
 	return true;
 }
-//判断第squareNum个方块能否前进
+//判断第squareNum个方块能否前进,如果不能前进，保证他们的位置是相切的
 squareObject.prototype.canGoAhead = function(squareNum)
 {
 	if(this.isInvisible[squareNum])
@@ -343,15 +344,21 @@ squareObject.prototype.canGoAhead = function(squareNum)
 		{
 			otherSquareLeft = this.x[1];
 			otherSquareRight = this.x[1] + this.a[1];
-			if(Math.abs(otherSquareLeft - squareRight) < 1)
+			if(Math.abs(otherSquareLeft - squareRight) < 3)
+			{
+				//square.x[squareNum] = otherSquareLeft - this.a[i];
 				return false;
+			}
 		}
 		else if(squareNum === 1)
 		{
 			otherSquareLeft = this.x[0];
 			otherSquareRight = this.x[0] + this.a[0];
-			if(Math.abs(otherSquareLeft - squareRight) < 1)
+			if(Math.abs(otherSquareLeft - squareRight) < 3)
+			{
+				//square.x[squareNum] = otherSquareLeft - this.a[i];
 				return false;
+			}
 		}
 	}
 	//固定障碍
@@ -361,8 +368,9 @@ squareObject.prototype.canGoAhead = function(squareNum)
 		{
 			let obLeft = fixedObstacle.x[i];
 			let obRight = fixedObstacle.x[i] + fixedObstacle.width[i];
-			if(Math.abs(squareRight-obLeft) <= 4)
+			if(Math.abs(squareRight-obLeft) <= 2)
 			{
+				//this.x[i] = obLeft - this.a[i];
 				return false;
 			}
 		}
@@ -486,7 +494,7 @@ squareObject.prototype.useInvisible = function(squareNum)
 //停一秒之后再进行change,有动画
 squareObject.prototype.useChange = function(squareNum)
 {
-
+	changeSound.play();
 	let t;
 	t = this.x[0];
 	this.x[0] = this.x[1];
@@ -518,26 +526,74 @@ squareObject.prototype.drawSquare = function()
 	{
 		if(!this.isInvisible[i])
 			gameContext.fillStyle = this.color[i];
+		//隐身
 		else
 		{
+			gameContext.drawImage(invisibleImg,this.x[i], this.y[i] - 2 * this.a[i],this.a[i], this.a[i]);
 			if(i === 0)
 				gameContext.fillStyle = "rgba(255,255,255,0.3)"
 			else if(i === 1)
 				gameContext.fillStyle = "rgba(0,0,0,0.3)"
 		}
 		gameContext.fillRect(this.x[i],this.y[i],this.a[i],this.a[i]);
-		//不正常的情况，红色边框
+
+
+
+		//加速
+		if(this.isSpeedUp[i])
+		{
+			gameContext.fillStyle = this.color[i];
+			gameContext.beginPath();
+			let r = this.a[i] / 8;
+			gameContext.arc(this.x[i] + this.a[i] / 3, this.y[i] + this.a[i] + r, r, 0, Math.PI * 2, false);
+			gameContext.fill();
+			gameContext.beginPath();
+			gameContext.arc(this.x[i] + 2 * this.a[i] / 3, this.y[i] + this.a[i] + r, r, 0, Math.PI * 2, false);
+			gameContext.fill();
+		}
+		//按键反向
 		if(!this.isNormal[i])
 		{
+			gameContext.drawImage(reverseImg,this.x[i], this.y[i] - 2 * this.a[i],this.a[i], this.a[i]);
+			//梯形的被覆盖区域
+			gameContext.beginPath();
+			gameContext.moveTo(this.x[i],this.y[i] - this.a[i]);
+			gameContext.lineTo(this.x[i] - this.a[i] / 2, this.y[i] + this.a[i]);
+			gameContext.lineTo(this.x[i] + 3 * this.a[i] / 2, this.y[i] + this.a[i]);
+			gameContext.lineTo(this.x[i] + this.a[i], this.y[i] - this.a[i]);
+			gameContext.lineTo(this.x[i], this.y[i] - this.a[i]);
+			gameContext.closePath();
+			gameContext.fillStyle = "rgba(255,0,0,0.2)";
+			gameContext.fill();
+
 			gameContext.strokeStyle = "red";
 			gameContext.strokeRect(this.x[i],this.y[i],this.a[i],this.a[i]);
 		}
-		//绘制方块上的火炮
+		//被减速：上方有飞碟
+		if(this.isSlowDown[i])
+		{
+			gameContext.drawImage(speedDownImg,this.x[i], this.y[i] - 2 * this.a[i],this.a[i], this.a[i]);
+			//梯形的被覆盖区域
+			gameContext.beginPath();
+			gameContext.moveTo(this.x[i],this.y[i] - this.a[i]);
+			gameContext.lineTo(this.x[i] - this.a[i] / 2, this.y[i] + this.a[i]);
+			gameContext.lineTo(this.x[i] + 3 * this.a[i] / 2, this.y[i] + this.a[i]);
+			gameContext.lineTo(this.x[i] + this.a[i], this.y[i] - this.a[i]);
+			gameContext.lineTo(this.x[i], this.y[i] - this.a[i]);
+			gameContext.closePath();
+			gameContext.fillStyle = "rgba(0,255,0,0.2)";
+			gameContext.fill();
+
+			gameContext.strokeStyle = "green";
+			gameContext.strokeRect(this.x[i],this.y[i],this.a[i],this.a[i]);
+		}
+		//持有火炮道具
 		if(this.util[i] === 6)
 		{
 			gameContext.fillStyle = this.color[i];
 			gameContext.fillRect(this.x[i] + this.a[i], this.y[i] + 2 * this.a[i] / 5, 2* this.a[i] / 3, this.a[i] / 5);
 		}
+
 		//绘制p1和p2的指示文字
 		let smallFontSize = unit / 3;
 		let smallFont = smallFontSize + "px " + "Courier New";

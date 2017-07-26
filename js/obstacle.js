@@ -24,9 +24,8 @@ fixedObstacleObject.prototype.init = function()
 }
 fixedObstacleObject.prototype.born = function()
 {
-	//每次在几行中产生障碍是随机的
-
-	if(level === 1 || level === 2)
+	//每次在几行中产生障碍是随机的,但概率不同
+	if(level === 1 || level === 2 || level === 3)
 	{
 		//count代表有几行出现障碍
 		let count;

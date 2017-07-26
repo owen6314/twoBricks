@@ -86,7 +86,7 @@ quantum.prepare = function()
 
 	//在三个方块同在的背景界面停留
 	setTimeout(quantum.startAnimation,8000);
-
+	setTimeout(function(){bgMusic.play()}, 3000);
 	//动画，之后开始游戏
 	setTimeout(quantum.gameInit,31000);
 
@@ -213,6 +213,14 @@ quantum.generateObstacle = function()
 			fixedObstacle.born();
 		}
 	}
+	else if(level === 3)
+	{
+		if(Date.now() - obstacleTimeRecorder >= 400)
+		{
+			obstacleTimeRecorder = Date.now();
+			fixedObstacle.born();
+		}
+	}
 }
 quantum.generateUtil = function()
 {
@@ -232,6 +240,14 @@ quantum.generateUtil = function()
 			util.born();
 		}
 	}
+	else if(level === 3)
+	{
+		if(Date.now() - utilTimeRecorder >= 5000)
+		{
+			utilTimeRecorder = Date.now();
+			util.born();
+		}
+	}
 }
 quantum.updateScore = function()
 {
@@ -244,7 +260,7 @@ quantum.updateScore = function()
 quantum.updateGameStatus = function()
 {
 	//玩家1失败
-	if(square.x[0] + square.a[0] < 0)
+	if(square.x[0] + square.a[0] < 0 || square.x[1] > mapWidth)
 	{
 		isOver = true;
 		winSound.play();
@@ -252,7 +268,7 @@ quantum.updateGameStatus = function()
 		gameContext.fillText("Player2 Wins!", mapWidth / 3 + unit, unit);
 	}
 	//玩家2失败
-	else if(square.x[1] + square.a[1] < 0)
+	else if(square.x[1] + square.a[1] < 0 || square.x[0] > mapWidth)
 	{
 		isOver = true;
 		winSound.play();
@@ -274,14 +290,25 @@ quantum.updateLevel = function()
 			square.speed[1] = globalSpeed;
 		}
 	}
+	//第三关，基本无法达到
+	else if(level === 2)
+	{
+		if(score1 / 100 >= 100 || score2 / 100 >= 100)
+		{
+			obstacleTimeRecorder = Date.now();
+			level = 3;
+			globalSpeed = 8;
+			square.speed[0] = globalSpeed;
+			square.speed[1] = globalSpeed;
+		}
+	}
 }
 
 quantum.loadSounds = function()
 {
-	/*
 	bgMusic = new Audio();
-	bgMusic.src = 'sound/bg.mp3';
-	bgMusic.load();*/
+	bgMusic.src = 'sound/bgMusic.mp3';
+	bgMusic.load();
 	getUtilSound = new Audio();
 	getUtilSound.src = 'sound/get.wav';
 	getUtilSound.load();
@@ -312,7 +339,7 @@ quantum.loadSounds = function()
 	invisibleSound.src = 'sound/invisibleEffect.wav';
 	invisibleSound.load();
 	changeSound = new Audio();
-	changeSound.src = '';
+	changeSound.src = 'sound/change.wav';
 	changeSound.load();
 	gunSound = new Audio();
 	gunSound.src="sound/gunEffect.mp3";
