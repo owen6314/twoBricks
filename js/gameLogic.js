@@ -85,12 +85,12 @@ quantum.prepare = function()
 	square.drawSquare();
 
 	//在三个方块同在的背景界面停留
-	//setTimeout(quantum.startAnimation,8000);
+	setTimeout(quantum.startAnimation,8000);
 
 	//动画，之后开始游戏
-	//setTimeout(quantum.gameInit,31000);
+	setTimeout(quantum.gameInit,31000);
 
-	quantum.gameInit();
+	//quantum.gameInit();
 
 }
 //开场动画，待完善
@@ -230,7 +230,7 @@ quantum.updateGameStatus = function()
 		isOver = true;
 		winSound.play();
 		gameContext.fillStyle = "white";
-		gameContext.fillText("Player2 Wins!", mapWidth / 3, unit);
+		gameContext.fillText("Player2 Wins!", mapWidth / 3 + unit, unit);
 	}
 	//玩家2失败
 	else if(square.x[1] + square.a[1] < 0)
@@ -238,7 +238,7 @@ quantum.updateGameStatus = function()
 		isOver = true;
 		winSound.play();
 		gameContext.fillStyle = "white";
-		gameContext.fillText("Player1 Wins!", mapWidth / 3, unit);
+		gameContext.fillText("Player1 Wins!", mapWidth / 3 + unit, unit);
 	}
 }
 
