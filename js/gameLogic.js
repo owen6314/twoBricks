@@ -150,7 +150,7 @@ quantum.gameInit = function()
 	isOver = false;
 
 	//调整globalSpeed，更改碰撞检测
-	globalSpeed = 3;
+	globalSpeed = 4;
 	totalUtilNum = 6;
 	score1 = 0;
 	score2 = 0;
@@ -167,7 +167,7 @@ quantum.gameInit = function()
 	quantum.gameLoop();
 
 
-	tunnel.drawTunnel();
+	//tunnel.drawTunnel();
 }
 
 quantum.gameLoop = function()
@@ -179,16 +179,19 @@ quantum.gameLoop = function()
 		gameContext.clearRect(0,0,mapWidth,mapHeight);
 		drawUserStatus();
 		square.updateSquare();
-		square.drawSquare();
 		quantum.generateObstacle();
 		fixedObstacle.updateFixedObstacle();
-		fixedObstacle.drawFixedObstacle();
 		quantum.generateUtil();
 		util.updateUtil();
+
+		square.drawSquare();
+		fixedObstacle.drawFixedObstacle();
 		util.drawUtil();
 
 		quantum.updateScore();
 		quantum.updateGameStatus();
+		quantum.updateLevel();
+
 	}
 }
 
@@ -196,7 +199,15 @@ quantum.generateObstacle = function()
 {
 	if(level === 1)
 	{
-		if(Date.now() - obstacleTimeRecorder >= 3000)
+		if(Date.now() - obstacleTimeRecorder >= 1000)
+		{
+			obstacleTimeRecorder = Date.now();
+			fixedObstacle.born();
+		}
+	}
+	else if(level === 2)
+	{
+		if(Date.now() - obstacleTimeRecorder >= 600)
 		{
 			obstacleTimeRecorder = Date.now();
 			fixedObstacle.born();
@@ -207,7 +218,15 @@ quantum.generateUtil = function()
 {
 	if(level === 1)
 	{
-		if(Date.now() - utilTimeRecorder >= 2000)
+		if(Date.now() - utilTimeRecorder >= 5000)
+		{
+			utilTimeRecorder = Date.now();
+			util.born();
+		}
+	}
+	else if(level === 2)
+	{
+		if(Date.now() - utilTimeRecorder >= 5000)
 		{
 			utilTimeRecorder = Date.now();
 			util.born();
@@ -241,7 +260,21 @@ quantum.updateGameStatus = function()
 		gameContext.fillText("Player1 Wins!", mapWidth / 3 + unit, unit);
 	}
 }
-
+//过关
+quantum.updateLevel = function()
+{
+	if(level === 1)
+	{
+		if(score1 / 100 >= 30 || score2 / 100 >= 30)
+		{
+			obstacleTimeRecorder = Date.now();
+			level = 2;
+			globalSpeed = 6;
+			square.speed[0] = globalSpeed;
+			square.speed[1] = globalSpeed;
+		}
+	}
+}
 
 quantum.loadSounds = function()
 {

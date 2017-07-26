@@ -60,6 +60,31 @@ utilObject.prototype.updateUtil = function()
 			}
 		}
 	}
+
+
+	//debug检查所在位置是否有障碍,目前不明白bug的出现原因，但加上下面代码之后可以解决
+	for(let i = 0; i < this.num; i++)
+	{
+		if(this.isAlive[i])
+		{
+			var utilLeft = this.x[i];
+			var utilRight = utilLeft + this.width[0];
+			//检查固定障碍
+			for(let j = 0; j < fixedObstacle.num;j++)
+			{
+				if(fixedObstacle.isAlive[j] && fixedObstacle.row[j] === this.row[i])
+				{
+					let obLeft = fixedObstacle.x[j];
+					let obRight = fixedObstacle.x[j] + fixedObstacle.width[j];
+					if(utilLeft >= obLeft && utilLeft <= obRight || utilRight >= obLeft && utilRight <= obRight)
+					{
+						this.isAlive[i] = false;
+					}
+
+				}
+			}
+		}
+	}
 }
 utilObject.prototype.drawUtil = function()
 {
@@ -87,6 +112,7 @@ utilObject.prototype.canPlace = function(targetRow)
 			{
 				return false;
 			}
+
 		}
 	}
 	return true;

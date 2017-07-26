@@ -26,7 +26,7 @@ fixedObstacleObject.prototype.born = function()
 {
 	//每次在几行中产生障碍是随机的
 
-	if(level === 1)
+	if(level === 1 || level === 2)
 	{
 		//count代表有几行出现障碍
 		let count;
