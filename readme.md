@@ -1,4 +1,5 @@
 # Two Bricks
+Project of course **Front end Tech** in school of software in Tsinghua University.
 ## 游戏说明
 - 玩家1：W键向上，S键向下，D键使用道具
 - 玩家2：方向键向上向下，M键使用道具
